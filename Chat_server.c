@@ -11,22 +11,31 @@
 
 int main(int argc, char *argv[])
 {
-    int listenfd = 0, connfd = 0;
+    int listenfd = 0, connfd = 0, portnumber;
     struct sockaddr_in serv_addr; 
 
     char sendBuff[1025];
     time_t ticks; 
+    printf("\nThis is Chat Server:\n");
+    printf("\nEnter the server port number : ");
+    scanf("%d", &portnumber);
 
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(listenfd < 0){
+       printf("\nFailed to create Socket\n");
+       exit(0);
+     }
+
     memset(&serv_addr, '0', sizeof(serv_addr));
     memset(sendBuff, '0', sizeof(sendBuff)); 
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(5000); 
-
+    serv_addr.sin_port = htons(portnumber); 
+    printf("\nBinding Socket to the Server Address:\n");
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
 
+    printf("\nListening  on tcp port :%d\n", portnumber);
     listen(listenfd, 10); 
 
     while(1)
